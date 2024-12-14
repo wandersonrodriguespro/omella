@@ -1,6 +1,6 @@
 import Config
 
-config :populate_db_script, ecto_repos: [PopulateDBScript.Repo],
+config :populate_db_script, PopulateDBScript.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "postgres",

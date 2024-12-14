@@ -11,7 +11,6 @@ defmodule PopulateDBScript.MixProject do
     ]
   end
 
-  # Run "mix help compile.app" to learn about applications.
   def application do
     [
       extra_applications: [:logger],
@@ -19,11 +18,10 @@ defmodule PopulateDBScript.MixProject do
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
   [
-    {:ecto, "~> 3.9"},    # Ecto
-    {:ecto_sql, "~> 3.9"}, # Ecto SQL para integração com bancos de dados SQL
+    {:ecto, "~> 3.9"},
+    {:ecto_sql, "~> 3.9"},
     {:postgrex, "~> 0.15"},
     {:csv, "~> 2.4"}
   ]
