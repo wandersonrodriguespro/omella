@@ -1,9 +1,9 @@
-defmodule PopulateDBScript.MixProject do
+defmodule CsvImporter.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :populate_db_script,
+      app: :csv_importer,
       version: "0.1.0",
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
@@ -15,17 +15,16 @@ defmodule PopulateDBScript.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {PopulateDbScript.Application, []}
+    mod: {CsvImporter.Application, []}
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
-  [
-    {:ecto, "~> 3.9"},    # Ecto
-    {:ecto_sql, "~> 3.9"}, # Ecto SQL para integração com bancos de dados SQL
-    {:postgrex, "~> 0.15"},
-    {:csv, "~> 2.4"}
-  ]
-end
+    [
+      {:csv, "~> 3.0"},
+    {:ecto_sql, "~> 3.10"},
+    {:postgrex, ">= 0.0.0"}
+    ]
+  end
 end

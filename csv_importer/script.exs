@@ -1,16 +1,102 @@
-defmodule PopulateDBScript.Seeds do
-  alias PopulateDBScript.Repo
-  alias PopulateDBScript.PublicSchool
+defmodule CsvImporter.Repo do
+  use Ecto.Repo,
+    otp_app: :csv_importer,
+    adapter: Ecto.Adapters.Postgres
+end
 
-  def run do
-    "/home/wanderson/Downloads/public_school.csv"
+# lib/csv_importer/schema.ex
+defmodule CsvImporter.YourSchema do
+  use Ecto.Schema
+
+  schema "sua_tabela" do
+    # Defina aqui os campos exatos da sua tabela
+    field :school_name, :string
+    field :state_name_public_school_latest_year, :string
+    field :state_name_public_school_2023_24, :string
+    field :state_abbr_public_school_latest_year, :string
+    field :school_name_public_school_2023_24, :string
+    field :school_id_nces_assigned_public_school_latest_year, :string
+    field :agency_name_public_school_2023_24, :string
+    field :agency_id_nces_assigned_public_school_latest_year, :string
+    field :ansi_fips_state_code_public_school_latest_year, :string
+    field :web_site_url_public_school_2023_24, :string
+    field :location_address_1_public_school_2023_24, :string
+    field :location_address_2_public_school_2023_24, :string
+    field :location_address_3_public_school_2023_24, :string
+    field :location_city_public_school_2023_24, :string
+    field :location_state_abbr_public_school_2023_24, :string
+    field :location_zip_public_school_2023_24, :string
+    field :location_zip4_public_school_2023_24, :string
+    field :mailing_address_1_public_school_2023_24, :string
+    field :mailing_address_2_public_school_2023_24, :string
+    field :mailing_address_3_public_school_2023_24, :string
+    field :mailing_city_public_school_2023_24, :string
+    field :mailing_state_abbr_public_school_2023_24, :string
+    field :mailing_zip_public_school_2023_24, :string
+    field :mailing_zip4_public_school_2023_24, :string
+    field :phone_number_public_school_2023_24, :string
+    field :out_of_state_flag_public_school_2023_24, :string
+    field :school_type_public_school_2023_24, :string
+    field :agency_type_district_2023_24, :string
+    field :start_of_year_status_public_school_2023_24, :string
+    field :updated_status_public_school_2023_24, :string
+    field :effective_date_of_updated_status_public_school_2023_24, :string
+    field :charter_school_public_school_2023_24, :string
+    field :shared_time_school_public_school_2023_24, :string
+    field :state_school_id_public_school_2023_24, :string
+    field :state_agency_id_public_school_2023_24, :string
+    field :reconstituted_flag_public_school_2023_24, :string
+    field :virtual_school_status_sy_2016_17_onward_public_school_2023_24, :string
+    field :national_school_lunch_program_public_school_2023_24, :string
+    field :charter_authorizer_state_id_primary, :string
+    field :charter_authorizer_name_primary, :string
+    field :charter_authorizer_state_id_secondary, :string
+    field :charter_authorizer_name_secondary, :string
+    field :supervisory_union_id_number_public_school_2023_24, :string
+    field :school_level_sy_2017_18_onward_public_school_2023_24, :string
+    field :lowest_grade_offered_public_school_2023_24, :string
+    field :highest_grade_offered_public_school_2023_24, :string
+    field :prekindergarten_offered_public_school_2023_24, :string
+    field :kindergarten_offered_public_school_2023_24, :string
+    field :total_students_all_grades_excludes_ae_public_school_2023_24, :string
+    field :total_students_all_grades_includes_ae_public_school_2023_24, :string
+    field :free_lunch_eligible_public_school_2023_24, :string
+    field :direct_certification_public_school_2023_24, :string
+    field :reduced_price_lunch_eligible_students_public_school_2023_24, :string
+    field :free_and_reduced_lunch_students_public_school_2023_24, :string
+    field :grades_1_8_students_public_school_2023_24, :string
+    field :grades_9_12_students_public_school_2023_24, :string
+    field :prekindergarten_students_public_school_2023_24, :string
+    field :kindergarten_students_public_school_2023_24, :string
+    field :male_students_public_school_2023_24, :string
+    field :female_students_public_school_2023_24, :string
+    field :full_time_equivalent_fte_teachers_public_school_2023_24, :string
+    field :pupil_teacher_ratio_public_school_2023_24, :string
+
+    timestamps()
+  end
+end
+
+# lib/csv_importer/importer.ex
+defmodule CsvImporter.Importer do
+  alias CsvImporter.Repo
+  alias CsvImporter.YourSchema
+
+  def import_csv(file_path) do
+    file_path
     |> File.stream!()
-    |> CSV.decode!(headers: true)
-    |> Enum.each(&import_row/1)
+    |> CSV.decode(headers: true)
+    |> Enum.map(fn {:ok, row} -> 
+      process_row(row)
+    end)
+    |> Enum.chunk_every(1000)
+    |> Enum.each(fn chunk ->
+      Repo.insert_all(YourSchema, chunk)
+    end)
   end
 
-  defp import_row(row) do
-    %PublicSchool{
+  defp process_row(row) do
+    %{
       school_name: row["School_Name"],
       state_name_public_school_latest_year: row["State_Name_Public_School_Latest_available_year"],
       state_name_public_school_2023_24: row["State_Name_Public_School_2023_24"],
@@ -72,10 +158,61 @@ defmodule PopulateDBScript.Seeds do
       male_students_public_school_2023_24: row["Male_Students_Public_School_2023_24"],
       female_students_public_school_2023_24: row["Female_Students_Public_School_2023_24"],
       full_time_equivalent_fte_teachers_public_school_2023_24: row["Full_Time_Equivalent_FTE_Teachers_Public_School_2023_24"],
-      pupil_teacher_ratio_public_school_2023_24: row["Pupil_Teacher_Ratio_Public_School_2023_24"]
+      pupil_teacher_ratio_public_school_2023_24: row["Pupil_Teacher_Ratio_Public_School_2023_24"],
+      
+      inserted_at: NaiveDateTime.utc_now(),
+      updated_at: NaiveDateTime.utc_now()
     }
-    |> Repo.insert!()
+  end
+
+  defp parse_integer(value) do
+    case Integer.parse(value) do
+      {number, _} -> number
+      :error -> nil
+    end
   end
 end
 
-PopulateDBScript.Seeds.run()
+# config/config.exs
+import Config
+
+config :csv_importer, 
+  ecto_repos: [CsvImporter.Repo]
+
+config :csv_importer, CsvImporter.Repo,
+
+  username: "postgres",
+  password: "postgres",
+  database: "school_data_dev",
+  hostname: "localhost",
+
+# lib/csv_importer/application.ex
+defmodule CsvImporter.Application do
+  use Application
+
+  def start(_type, _args) do
+    children = [
+      CsvImporter.Repo
+    ]
+
+    opts = [strategy: :one_for_one, name: CsvImporter.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+end
+
+# lib/csv_importer.ex
+defmodule CsvImporter do
+  def run(file_path) do
+    {:ok, _} = Application.ensure_all_started(:csv_importer)
+    
+    IO.puts("Iniciando importação do CSV...")
+    
+    try do
+      CsvImporter.Importer.import_csv(file_path)
+      IO.puts("Importação concluída com sucesso!")
+    rescue
+      error ->
+        IO.puts("Erro durante a importação: #{inspect(error)}")
+    end
+  end
+end
