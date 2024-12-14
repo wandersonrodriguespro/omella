@@ -3,7 +3,7 @@ defmodule PopulateDBScript.Seeds do
   alias PopulateDBScript.PublicSchool
 
   def run do
-    "/home/wanderson/Downloads/public_school(1).csv"
+    "./public_school.csv"
     |> File.stream!()
     |> CSV.decode!(headers: true)
     |> Enum.each(&import_row/1)
