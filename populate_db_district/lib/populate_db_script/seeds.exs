@@ -1,6 +1,6 @@
 defmodule PopulateDBScript.Seeds do
   alias PopulateDBScript.Repo
-  alias PopulateDBScript.State
+  alias PopulateDBScript.District
 
   def run do
     "./district.csv"
