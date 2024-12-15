@@ -31,8 +31,8 @@ defmodule PopulateDBScript.PrivateSchool do
   end
 
   @doc false
-  def changeset(public_school, attrs) do
-    public_school
+  def changeset(private_school, attrs) do
+    private_school
     |> cast(attrs, [
     :private_school_name,
     :state_name_private_school_latest_available_year,
