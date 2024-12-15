@@ -65,5 +65,5 @@ CREATE TABLE state (
     grade_12_students_2023_24 VARCHAR(255),
     grade_13_students_2023_24 VARCHAR(255),
     ungraded_students_2023_24 VARCHAR(255),
-    adult_education_students_2023_24 VARCHAR(255),
+    adult_education_students_2023_24 VARCHAR(255)
 );
