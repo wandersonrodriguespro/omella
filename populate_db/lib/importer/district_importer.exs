@@ -3,7 +3,7 @@ defmodule PopulateDBScript.Seeds do
   alias PopulateDBScript.District
 
   def run do
-    "./district.csv"
+    "./csv_file/district.csv"
     |> File.stream!()
     |> CSV.decode!(headers: true)
     |> Enum.each(&import_row/1)

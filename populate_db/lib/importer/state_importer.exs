@@ -3,7 +3,7 @@ defmodule PopulateDBScript.Seeds do
   alias PopulateDBScript.State
 
   def run do
-    "./state.csv"
+    "./csv_file/state.csv"
     |> File.stream!()
     |> CSV.decode!(headers: true)
     |> Enum.each(&import_row/1)
